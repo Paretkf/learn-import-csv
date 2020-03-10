@@ -1,17 +1,30 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <button @click="onInputfile">import</button>
+    {{file}}
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+const csv = require('csv-parser')
+const fs = require('fs')
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  data () {
+    return {
+      file: {}
+    }
+  },
+  methods: {
+    onInputfile () {
+      let results = []
+      fs.createReadStream('./data.csv')
+        .pipe(csv())
+        .on('data', (data) => results.push(data))
+        .on('end', () => {
+          console.log(results)
+        })
+    }
   }
 }
 </script>
